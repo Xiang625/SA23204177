@@ -1,0 +1,130 @@
+---
+title: "Introduction to SA23204177"
+author: "Mingming Xiang"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to SA23204177}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Overview
+
+__tt__ is a simple R package developed to test whether the sample mean vector is a zero vector (Wang and Shao, 2020) using R, Rcpp and RcppEigen (implemented through the R package _Rcpp_ and _RcppEigen_).
+Both R and Rcpp versions are produced. Namely _Wang2020_ for R and _Wang2020C_ for C++.
+
+The R package 'microbenchmark' can be used to benchmark the above R and C++ functions.
+
+## Details
+Suppose we have a $p$-dimensional stationary nonlinear time series
+$Y_t=\mu+g(\epsilon_t,\epsilon_{t-1},\cdots)$, for some measurable function $g$, where $\{\epsilon_t\}_{t=-\infty}^\infty$ are i.i.d. random elements in some measurable space. 
+
+For $r \in [0,1]$, define 
+$$
+T_n(r):=\sum_{t=1}^{\lfloor nr\rfloor}\sum_{s=1}^tY_{t+m}^TY_s.
+$$
+The test statistic is defined as:
+$$
+T_{SN,n}:=\frac{T_n(1)^2}{W_n^2},
+$$
+where $W_n^2=\frac1n\sum_{k=1}^n\left(T_n(k/n)-\frac{k(k+1)}{n(n+1)}T_n(1)\right)^2$.
+
+
+## Source code of _Wang2020_ and _Wang2020C_
+
+The source R code for _Wang2020_ is as follows:
+```{r,eval=FALSE}
+T_n <- function(r,n1,YY,m){
+  t_n = 0
+  n = floor(r*n1)
+  for (t in 1:n){
+    t_n = t_n + sum(YY[t+m,1:t])
+  }
+  return(t_n)
+}
+
+Wang2020 <- function(sam,m,n){
+  n1 = n-m
+  YY = sam%*%t(sam)
+  W <- NULL
+  for (k in 1:n1){
+    W[k] = (T_n(k/n1,n1,YY,m)-k*(k+1)/n1/(n1+1)*T_n(1,n1,YY,m))^2
+  }
+  W_n = mean(W)
+  test = T_n(1,n1,YY,m)^2/W_n
+  reject = test > 54.70
+  return(reject)
+}
+```
+
+
+The source C++ code for _Wang2020C_ is as follows:
+```{Rcpp,eval=FALSE}
+#include <RcppEigen.h>
+using namespace Rcpp;
+// [[Rcpp::depends(RcppEigen)]]
+//[[Rcpp::export]]
+double T_nC(double r, int n1, const Eigen::MatrixXd& YY, int m){
+  double t_n = 0;
+  int n = r*n1;
+  for (int i=1; i<=n; i++){
+    for (int j=1; j<=i; j++){
+      t_n = t_n + YY(i+m-1,j-1);
+    }
+  }
+  return t_n;
+}
+
+//[[Rcpp::export]]
+bool Wang2020C(const Eigen::MatrixXd& sam, int m, int n){
+  double n1 = n - m;
+  Eigen::MatrixXd YY = sam * sam.adjoint();
+  double W = 0;
+  for (int k=1; k <= n1; k++){
+    W += pow(T_nC(k/n1,n1,YY,m)-k*(k+1)/n1/(n1+1)*T_nC(1,n1,YY,m),2);
+  }
+  double W_n = W / n1;
+  double test = pow(T_nC(1,n1,YY,m),2)/W_n;
+  bool reject = test > 54.70;
+  return reject;
+}
+```
+
+
+## Examples
+
+```{r}
+library(SA23204177)
+library(MASS)
+set.seed(1234)
+n1 <- n2 <- 50
+p <- 200
+mu1 <- rep(0, p)
+mu2 <- mu1
+mu2[1:10] <- 1
+true.cov <- 0.4^(abs(outer(1:p, 1:p, "-"))) # AR1 covariance
+sam1 <- mvrnorm(n = n1, mu = mu1, Sigma = true.cov)
+sam2 <- mvrnorm(n = n2, mu = mu2, Sigma = true.cov)
+Wang2020(sam1, m=5, n=n1)
+Wang2020(sam2, m=5, n=n2)
+Wang2020C(sam1, m=5, n=n1)
+Wang2020C(sam2, m=5, n=n2)
+```
+
+## Benchmarking _Wang2020_ and _Wang2020C_
+
+```{r,eval=TRUE}
+library(microbenchmark)
+
+tm2 <- microbenchmark(
+  Wang2020 = Wang2020(sam1, m=5, n=n1),
+  Wang2020C = Wang2020C(sam1, m=5, n=n1)
+)
+knitr::kable(summary(tm2)[,c(1,3,5,6)])
+```
+
+The above results show an evident computational speed gain of C++ against R.
+
+
+

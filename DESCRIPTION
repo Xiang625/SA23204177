@@ -1,0 +1,15 @@
+Package: SA23204177
+Type: Package
+Title: Test the mean of highdimensional samples
+Version: 1.0
+Date: 2023-12-03
+Author: Mingming Xiang
+Maintainer: Mingming Xiang <xmm483754@gmail.com>
+Description: Testing whether the sample mean vector is a zero vector using R, Rcpp and RcppEigen. 
+License: GPL (>= 2)
+Imports: RcppEigen, Rcpp, ggplot2, dplyr, bootstrap, boot, DAAG, twosamples, coda, microbenchmark, knitr, xtable, rmarkdown, MASS
+LinkingTo: Rcpp, RcppEigen
+RoxygenNote: 7.2.3
+Encoding: UTF-8
+VignetteBuilder: knitr
+References: Runmin Wang, Xiaofeng Shao. (2020) "Hypothesis testing for high-dimensional time series via self-normalization." Ann. Statist. 48 (5) 2728 - 2758, October 2020. https://doi.org/10.1214/19-AOS1904
