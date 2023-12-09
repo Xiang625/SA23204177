@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Mingming Xiang" />
+
+<meta name="date" content="2023-12-10" />
+
+<title>Introduction to SA23204177</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to SA23204177</h1>
+<h4 class="author">Mingming Xiang</h4>
+<h4 class="date">2023-12-10</h4>
+
+
+
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p><strong>SA23204177</strong> is a simple R package developed to test
+whether the sample mean vector is a zero vector (Wang and Shao, 2020)
+using R, Rcpp and RcppEigen (implemented through the R package
+<em>Rcpp</em> and <em>RcppEigen</em>). Both R and Rcpp versions are
+produced. Namely <em>Wang2020</em> for R and <em>Wang2020C</em> for
+C++.</p>
+<p>The R package ‘microbenchmark’ can be used to benchmark the above R
+and C++ functions.</p>
+</div>
+<div id="details" class="section level2">
+<h2>Details</h2>
+<p>Suppose we have a <span class="math inline">\(p\)</span>-dimensional
+stationary nonlinear time series <span class="math inline">\(Y_t=\mu+g(\epsilon_t,\epsilon_{t-1},\cdots)\)</span>,
+for some measurable function <span class="math inline">\(g\)</span>,
+where <span class="math inline">\(\{\epsilon_t\}_{t=-\infty}^\infty\)</span> are
+i.i.d. random elements in some measurable space.</p>
+<p>For <span class="math inline">\(r \in [0,1]\)</span>, define <span class="math display">\[
+T_n(r):=\sum_{t=1}^{\lfloor nr\rfloor}\sum_{s=1}^tY_{t+m}^TY_s.
+\]</span> The test statistic is defined as: <span class="math display">\[
+T_{SN,n}:=\frac{T_n(1)^2}{W_n^2},
+\]</span> where <span class="math inline">\(W_n^2=\frac1n\sum_{k=1}^n\left(T_n(k/n)-\frac{k(k+1)}{n(n+1)}T_n(1)\right)^2\)</span>.</p>
+</div>
+<div id="source-code-of-wang2020-and-wang2020c" class="section level2">
+<h2>Source code of <em>Wang2020</em> and <em>Wang2020C</em></h2>
+<p>The source R code for <em>Wang2020</em> is as follows:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>T_n <span class="ot">&lt;-</span> <span class="cf">function</span>(r,n1,YY,m){</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  t_n <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  n <span class="ot">=</span> <span class="fu">floor</span>(r<span class="sc">*</span>n1)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n){</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>    t_n <span class="ot">=</span> t_n <span class="sc">+</span> <span class="fu">sum</span>(YY[t<span class="sc">+</span>m,<span class="dv">1</span><span class="sc">:</span>t])</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  }</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="fu">return</span>(t_n)</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>}</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>Wang2020 <span class="ot">&lt;-</span> <span class="cf">function</span>(sam,m,n){</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>  n1 <span class="ot">=</span> n<span class="sc">-</span>m</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>  YY <span class="ot">=</span> sam<span class="sc">%*%</span><span class="fu">t</span>(sam)</span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>  W <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n1){</span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>    W[k] <span class="ot">=</span> (<span class="fu">T_n</span>(k<span class="sc">/</span>n1,n1,YY,m)<span class="sc">-</span>k<span class="sc">*</span>(k<span class="sc">+</span><span class="dv">1</span>)<span class="sc">/</span>n1<span class="sc">/</span>(n1<span class="sc">+</span><span class="dv">1</span>)<span class="sc">*</span><span class="fu">T_n</span>(<span class="dv">1</span>,n1,YY,m))<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>  }</span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>  W_n <span class="ot">=</span> <span class="fu">mean</span>(W)</span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>  test <span class="ot">=</span> <span class="fu">T_n</span>(<span class="dv">1</span>,n1,YY,m)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>W_n</span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>  reject <span class="ot">=</span> test <span class="sc">&gt;</span> <span class="fl">54.70</span></span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>  <span class="fu">return</span>(reject)</span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>}</span></code></pre></div>
+<p>The source C++ code for <em>Wang2020C</em> is as follows:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;RcppEigen.h&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> Rcpp<span class="op">;</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">// [[Rcpp::depends(RcppEigen)]]</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">//[[Rcpp::export]]</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="dt">double</span> T_nC<span class="op">(</span><span class="dt">double</span> r<span class="op">,</span> <span class="dt">int</span> n1<span class="op">,</span> <span class="at">const</span> Eigen<span class="op">::</span>MatrixXd<span class="op">&amp;</span> YY<span class="op">,</span> <span class="dt">int</span> m<span class="op">){</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  <span class="dt">double</span> t_n <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>  <span class="dt">int</span> n <span class="op">=</span> r<span class="op">*</span>n1<span class="op">;</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i<span class="op">=</span><span class="dv">1</span><span class="op">;</span> i<span class="op">&lt;=</span>n<span class="op">;</span> i<span class="op">++){</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j<span class="op">=</span><span class="dv">1</span><span class="op">;</span> j<span class="op">&lt;=</span>i<span class="op">;</span> j<span class="op">++){</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>      t_n <span class="op">=</span> t_n <span class="op">+</span> YY<span class="op">(</span>i<span class="op">+</span>m<span class="op">-</span><span class="dv">1</span><span class="op">,</span>j<span class="op">-</span><span class="dv">1</span><span class="op">);</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>  <span class="cf">return</span> t_n<span class="op">;</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">//[[Rcpp::export]]</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="dt">bool</span> Wang2020C<span class="op">(</span><span class="at">const</span> Eigen<span class="op">::</span>MatrixXd<span class="op">&amp;</span> sam<span class="op">,</span> <span class="dt">int</span> m<span class="op">,</span> <span class="dt">int</span> n<span class="op">){</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>  <span class="dt">double</span> n1 <span class="op">=</span> n <span class="op">-</span> m<span class="op">;</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>  Eigen<span class="op">::</span>MatrixXd YY <span class="op">=</span> sam <span class="op">*</span> sam<span class="op">.</span>adjoint<span class="op">();</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a>  <span class="dt">double</span> W <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> k<span class="op">=</span><span class="dv">1</span><span class="op">;</span> k <span class="op">&lt;=</span> n1<span class="op">;</span> k<span class="op">++){</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a>    W <span class="op">+=</span> pow<span class="op">(</span>T_nC<span class="op">(</span>k<span class="op">/</span>n1<span class="op">,</span>n1<span class="op">,</span>YY<span class="op">,</span>m<span class="op">)-</span>k<span class="op">*(</span>k<span class="op">+</span><span class="dv">1</span><span class="op">)/</span>n1<span class="op">/(</span>n1<span class="op">+</span><span class="dv">1</span><span class="op">)*</span>T_nC<span class="op">(</span><span class="dv">1</span><span class="op">,</span>n1<span class="op">,</span>YY<span class="op">,</span>m<span class="op">),</span><span class="dv">2</span><span class="op">);</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a>  <span class="dt">double</span> W_n <span class="op">=</span> W <span class="op">/</span> n1<span class="op">;</span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a>  <span class="dt">double</span> test <span class="op">=</span> pow<span class="op">(</span>T_nC<span class="op">(</span><span class="dv">1</span><span class="op">,</span>n1<span class="op">,</span>YY<span class="op">,</span>m<span class="op">),</span><span class="dv">2</span><span class="op">)/</span>W_n<span class="op">;</span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a>  <span class="dt">bool</span> reject <span class="op">=</span> test <span class="op">&gt;</span> <span class="fl">54.70</span><span class="op">;</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a>  <span class="cf">return</span> reject<span class="op">;</span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</div>
+<div id="examples" class="section level2">
+<h2>Examples</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(SA23204177)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">library</span>(MASS)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;MASS&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:DAAG&#39;:
+## 
+##     hills</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     select</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> n2 <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, p)</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>mu2 <span class="ot">&lt;-</span> mu1</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>mu2[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>true.cov <span class="ot">&lt;-</span> <span class="fl">0.4</span><span class="sc">^</span>(<span class="fu">abs</span>(<span class="fu">outer</span>(<span class="dv">1</span><span class="sc">:</span>p, <span class="dv">1</span><span class="sc">:</span>p, <span class="st">&quot;-&quot;</span>))) <span class="co"># AR1 covariance</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>sam1 <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(<span class="at">n =</span> n1, <span class="at">mu =</span> mu1, <span class="at">Sigma =</span> true.cov)</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>sam2 <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(<span class="at">n =</span> n2, <span class="at">mu =</span> mu2, <span class="at">Sigma =</span> true.cov)</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="fu">Wang2020</span>(sam1, <span class="at">m=</span><span class="dv">5</span>, <span class="at">n=</span>n1)</span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">Wang2020</span>(sam2, <span class="at">m=</span><span class="dv">5</span>, <span class="at">n=</span>n2)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">Wang2020C</span>(sam1, <span class="at">m=</span><span class="dv">5</span>, <span class="at">n=</span>n1)</span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">Wang2020C</span>(sam2, <span class="at">m=</span><span class="dv">5</span>, <span class="at">n=</span>n2)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="benchmarking-wang2020-and-wang2020c" class="section level2">
+<h2>Benchmarking <em>Wang2020</em> and <em>Wang2020C</em></h2>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">library</span>(microbenchmark)</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>tm2 <span class="ot">&lt;-</span> <span class="fu">microbenchmark</span>(</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>  <span class="at">Wang2020 =</span> <span class="fu">Wang2020</span>(sam1, <span class="at">m=</span><span class="dv">5</span>, <span class="at">n=</span>n1),</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>  <span class="at">Wang2020C =</span> <span class="fu">Wang2020C</span>(sam1, <span class="at">m=</span><span class="dv">5</span>, <span class="at">n=</span>n1)</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>)</span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">summary</span>(tm2)[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">6</span>)])</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">expr</th>
+<th align="right">lq</th>
+<th align="right">median</th>
+<th align="right">uq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Wang2020</td>
+<td align="right">4065.25</td>
+<td align="right">4814.00</td>
+<td align="right">5467.95</td>
+</tr>
+<tr class="even">
+<td align="left">Wang2020C</td>
+<td align="right">223.70</td>
+<td align="right">257.65</td>
+<td align="right">296.60</td>
+</tr>
+</tbody>
+</table>
+<p>The above results show an evident computational speed gain of C++
+against R.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
